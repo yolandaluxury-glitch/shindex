@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIP Exclusive - Las Vegas Championship Prediction</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+        body {
+            background: #030406;
+            color: #f1f2f6;
+            padding: 20px 10px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            align-items: center;
+        }
+        .prediction-card {
+            width: min(92vw,860px);
+            background: linear-gradient(145deg,#12141b,#0a0b10);
+            border-radius:24px;
+            padding:28px 24px;
+            border:1px solid #ffb72b44;
+            box-shadow: 0 0 40px #ff880026;
+        }
+        .header-bar {
+            display:flex;
+            justify-content: space-between;
+            align-items:center;
+            margin-bottom:24px;
+        }
+        .vip-tag {
+            background:linear-gradient(90deg,#ff6700,#ffbc2c);
+            color:#000;
+            font-weight:bold;
+            padding:8px 22px;
+            border-radius:30px;
+        }
+        .lang-select {
+            background:#222328;
+            border:1px solid #ffc13870;
+            color:#fff;
+            padding:8px 14px;
+            border-radius:12px;
+        }
+        .title-area{
+            text-align:center;
+            margin-bottom:26px;
+        }
+        .sub-head{
+            color:#ffd370;
+            letter-spacing:2px;
+            font-size:15px;
+            margin-bottom:10px;
+        }
+        h1{
+            font-size:42px;
+            background:linear-gradient(180deg,#ffdd78,#b88c20);
+            -webkit-background-clip:text;
+            color:transparent;
+        }
+        .event-date {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 215, 0, 0.35);
+            border-radius: 20px;
+            padding: 8px 16px;
+            color: #ffd700;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+        .desc-text{
+            color:#b4b8c3;
+            margin-top:8px;
+        }
+        /* 对战Banner：参考拳击海报风格 */
+        .fight-banner {
+            position: relative;
+            height: clamp(340px, 56vw, 380px);
+            border-radius: 16px;
+            overflow: hidden;
+            display: flex;
+            margin-bottom: 28px;
+            background:
+                radial-gradient(circle at center, rgba(255, 174, 0, 0.18), transparent 35%),
+                linear-gradient(180deg, #05060a 0%, #111318 48%, #05060a 100%);
+        }
+
+        /* 左右人物站位：海报式对峙 */
+        .fighter-figure {
+            position: absolute;
+            bottom: 0;
+            width: 48%;
+            height: 88%;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            z-index: 2;
+            transition: all 0.45s ease;
+            transform-origin: center bottom;
+        }
+
+        .fighter-figure img {
+            height: 100%;
+            width: auto;
+            max-width: 96%;
+            object-fit: contain;
+            object-position: center bottom;
+
+            /* 暗色电影感融合 */
+            filter:
+                drop-shadow(0 24px 30px rgba(0, 0, 0, 0.95))
+                drop-shadow(0 0 18px rgba(255, 255, 255, 0.08))
+                brightness(0.95)
+                contrast(1.25)
+                saturate(1.35)
+                sepia(0.18);
+
+            transition: all 0.45s ease;
+        }
+
+        .figure-garcia {
+            left: 0;
+        }
+
+        .figure-garcia img {
+            filter:
+                drop-shadow(0 24px 30px rgba(0, 0, 0, 0.95))
+                drop-shadow(-16px 0 22px rgba(255, 122, 0, 0.35))
+                brightness(0.95)
+                contrast(1.25)
+                saturate(1.35)
+                sepia(0.18);
+        }
+
+        .figure-benn {
+            right: 0;
+        }
+
+        .figure-benn img {
+            filter:
+                drop-shadow(0 24px 30px rgba(0, 0, 0, 0.95))
+                drop-shadow(16px 0 22px rgba(255, 215, 0, 0.35))
+                brightness(0.95)
+                contrast(1.25)
+                saturate(1.35)
+                sepia(0.18);
+        }
+
+        /* 人物底部暗色渐变，让人物和Banner自然融合 */
+        .fighter-figure::before {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 45%;
+            background: linear-gradient(to top, rgba(5, 6, 10, 0.95), rgba(5, 6, 10, 0.6), transparent);
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        /* 地面接触阴影 */
+        .fighter-figure::after {
+            content: "";
+            position: absolute;
+            bottom: -12px;
+            left: 50%;
+            width: 72%;
+            height: 22px;
+            border-radius: 50%;
+            transform: translateX(-50%);
+            background: radial-gradient(ellipse, rgba(0, 0, 0, 0.75), transparent 70%);
+            filter: blur(12px);
+            z-index: 4;
+        }
+
+        /* 选中状态：人物向中间轻微突出 */
+        .fight-banner.select-left .figure-garcia {
+            transform: translateX(-4%) scale(1.06);
+        }
+
+        .fight-banner.select-left .figure-garcia img {
+            filter:
+                drop-shadow(0 28px 36px rgba(0, 0, 0, 0.95))
+                drop-shadow(-20px 0 28px rgba(255, 122, 0, 0.45))
+                drop-shadow(0 0 18px rgba(255, 122, 0, 0.75))
+                brightness(1.08)
+                contrast(1.35)
+                saturate(1.45);
+        }
+
+        .fight-banner.select-right .figure-benn {
+            transform: translateX(4%) scale(1.06);
+        }
+
+        .fight-banner.select-right .figure-benn img {
+            filter:
+                drop-shadow(0 28px 36px rgba(0, 0, 0, 0.95))
+                drop-shadow(20px 0 28px rgba(255, 215, 0, 0.45))
+                drop-shadow(0 0 18px rgba(255, 215, 0, 0.75))
+                brightness(1.08)
+                contrast(1.35)
+                saturate(1.45);
+        }
+
+        /* 左右名字与描述，压在人物上方 */
+        .side-left,
+        .side-right {
+            position: absolute;
+            bottom: 0;
+            width: 48%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            padding-bottom: 22px;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .side-left {
+            left: 0;
+        }
+
+        .side-right {
+            right: 0;
+        }
+
+        .player-name-big {
+            font-size: clamp(22px, 4.8vw, 46px);
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 12;
+            text-shadow:
+                0 0 8px rgba(0, 0, 0, 0.95),
+                0 0 16px rgba(0, 0, 0, 0.8);
+        }
+
+        .left-name {
+            color: #ff8c28;
+            text-shadow:
+                0 0 8px rgba(255, 122, 0, 0.9),
+                0 0 16px rgba(255, 122, 0, 0.55),
+                0 0 24px rgba(0, 0, 0, 0.95);
+        }
+
+        .right-name {
+            color: #e9c252;
+            text-shadow:
+                0 0 8px rgba(255, 215, 0, 0.9),
+                0 0 16px rgba(255, 215, 0, 0.55),
+                0 0 24px rgba(0, 0, 0, 0.95);
+        }
+
+        .player-sub {
+            font-size: 13px;
+            opacity: 0.85;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 12;
+            margin-top: 6px;
+            color: rgba(255, 255, 255, 0.78);
+            text-shadow:
+                0 0 6px rgba(0, 0, 0, 0.95),
+                0 0 12px rgba(0, 0, 0, 0.8);
+        }
+
+        /* 中间 VS：更有拳击海报冲击力 */
+        .vs-center-wrap {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 15;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .vs-circle {
+            position:relative;
+            width: clamp(72px, 15vw, 90px);
+            height: clamp(72px, 15vw, 90px);
+            border-radius: 50%;
+            background: radial-gradient(circle, #000 0%, #111 100%);
+            /* border-image 会忽略圆角而渲染成方框；改用普通圆形描边 */
+            border: 4px solid #ffd700;
+            box-shadow:
+                0 0 22px rgba(255, 119, 0, 0.8),
+                0 0 42px rgba(255, 119, 0, 0.45);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: clamp(24px, 5vw, 30px);
+            font-weight: 900;
+            color: #fff;
+            letter-spacing: 1px;
+            animation: vsPulse 2.2s infinite ease-in-out;
+        }
+
+        .vs-circle::before,
+        .vs-circle::after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 215, 0, 0.35);
+            animation: vsRipple 1.8s infinite ease-out;
+        }
+
+        .vs-circle::before {
+            width: 160%;
+            height: 160%;
+            animation-delay: 0s;
+        }
+
+        .vs-circle::after {
+            width: 210%;
+            height: 210%;
+            animation-delay: 0.9s;
+        }
+
+        @keyframes vsPulse {
+            0%, 100% {
+                box-shadow: 0 0 22px rgba(255, 119, 0, 0.8);
+            }
+            50% {
+                box-shadow: 0 0 38px rgba(255, 170, 0, 0.95);
+            }
+        }
+
+        @keyframes vsRipple {
+            0% {
+                transform: scale(0.5);
+                opacity: 0.9;
+            }
+            100% {
+                transform: scale(1.6);
+                opacity: 0;
+            }
+        }
+
+        .vs-inner-glow {
+            position: absolute;
+            width: 62%;
+            height: 62%;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.25), transparent 70%);
+            animation: innerPulse 2.2s infinite ease-in-out;
+        }
+
+        @keyframes innerPulse {
+            0%, 100% {
+                opacity: 0.65;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.15);
+            }
+        }
+
+        .predict-label{
+            font-size:17px;
+            color:#ffd066;
+            font-weight:bold;
+            margin-bottom:14px;
+            letter-spacing:1px;
+        }
+        /* 竞猜选项卡片 */
+        .option-item{
+            border-radius:16px;
+            border: 2px solid transparent;
+            background:#181920;
+            padding:20px;
+            margin-bottom:16px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            cursor:pointer;
+            transition:0.35s all ease;
+        }
+        .option-item:hover{
+            background:#1e2029;
+        }
+        .option-item.active{
+            border-color:#ffbc2c;
+            background:#232420;
+            box-shadow:0 0 24px #ffb32240;
+            transform: scale(1.015);
+        }
+        .option-left{
+            display:flex;
+            gap:14px;
+            align-items:center;
+        }
+        .radio-circle{
+            width:24px;height:24px;
+            border-radius:50%;
+            border:2px solid #666;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            transition:0.3s;
+        }
+        .option-item.active .radio-circle{
+            border-color:#ffc830;
+        }
+        .radio-circle::after{
+            content:"";
+            width:12px;height:12px;
+            border-radius:50%;
+            background:#ffc830;
+            transform:scale(0);
+            transition:0.28s transform ease;
+        }
+        .option-item.active .radio-circle::after{
+            transform:scale(1);
+        }
+        .option-title{
+            font-size:20px;
+            font-weight:bold;
+        }
+        .option-desc{
+            color:#a0a4b0;
+            font-size:14px;
+            margin-top:3px;
+        }
+        .voucher-tag{
+            background:linear-gradient(90deg,#b48418,#e2b432);
+            color:#000;
+            font-weight:bold;
+            padding:10px 18px;
+            border-radius:10px;
+        }
+        .progress-bar-wrap{
+            width:100%;
+            height:6px;
+            background:#2c2d36;
+            border-radius:4px;
+            margin-top:-8px;
+            margin-bottom:20px;
+        }
+        .progress-fill{
+            height:100%;
+            background:linear-gradient(90deg,#ff6b00,#ffd233);
+            border-radius:4px;
+            transition:width 0.5s ease;
+        }
+        .submit-btn{
+            width:100%;
+            padding:16px;
+            margin-top:10px;
+            border-radius:14px;
+            border:none;
+            font-weight:bold;
+            font-size:18px;
+            background:linear-gradient(90deg,#ff7000,#ffc52b);
+            color:#000;
+            cursor:pointer;
+            transition:0.3s;
+        }
+        .submit-btn:disabled{
+            opacity:0.35;
+            cursor:not-allowed;
+        }
+        .ticket-info{
+            display:none;
+            margin-top:16px;
+            padding:12px;
+            border:1px solid rgba(255,197,43,.55);
+            border-radius:12px;
+            background:rgba(255,197,43,.08);
+            color:#ffe29a;
+            font-size:13px;
+            text-align:center;
+            line-height:1.65;
+        }
+        .ticket-info.visible{ display:block; }
+        .option-item.locked{ cursor:not-allowed; opacity:.72; }
+    </style>
+</head>
+<body>
+    <div class="prediction-card">
+        <div class="header-bar">
+            <div class="vip-tag">VIP EXCLUSIVE PREDICTION</div>
+            <select class="lang-select" id="languageSelect" aria-label="Language">
+                <option value="en">English</option>
+                <option value="zh">中文（简体）</option>
+                <option value="es">Español</option>
+                <option value="fr">Français</option>
+                <option value="de">Deutsch</option>
+                <option value="pt">Português</option>
+                <option value="it">Italiano</option>
+                <option value="ja">日本語</option>
+                <option value="ko">한국어</option>
+                <option value="ru">Русский</option>
+                <option value="ar">العربية</option>
+                <option value="hi">हिन्दी</option>
+                <option value="th">ไทย</option>
+                <option value="vi">Tiếng Việt</option>
+                <option value="id">Bahasa Indonesia</option>
+                <option value="tr">Türkçe</option>
+            </select>
+        </div>
+        <div class="title-area">
+            <div class="sub-head">★ TO FABULOUS LAS VEGAS ★</div>
+            <h1>Championship Night</h1>
+            <div class="event-date">September 12 • 8pm ET • on Paramount</div>
+            <div class="desc-text">Predict the decision winner & claim luxury rewards</div>
+        </div>
+        <div class="fight-banner not-select" id="fightBanner">
+            <!-- 左侧 Garcia -->
+            <div class="fighter-figure figure-garcia">
+                <img src="./garcia.png" alt="Garcia">
+            </div>
+
+            <div class="side-left">
+                <div class="player-name-big left-name">GARCIA</div>
+                <div class="player-sub">RYAN "KING"</div>
+            </div>
+
+            <!-- 中间 VS -->
+            <div class="vs-center-wrap">
+                <div class="vs-circle">
+                    <div class="vs-inner-glow"></div>
+                    VS
+                </div>
+            </div>
+
+            <!-- 右侧 Benn -->
+            <div class="fighter-figure figure-benn">
+                <img src="./benn.png" alt="Benn">
+            </div>
+
+            <div class="side-right">
+                <div class="player-name-big right-name">BENN</div>
+                <div class="player-sub">CONOR "THE DESTROYER"</div>
+            </div>
+        </div>
+        <div class="predict-label" id="predictLabel">PREDICT DECISION WINNER</div>
+        <div class="option-item" data-val="garcia">
+            <div class="option-left">
+                <div class="radio-circle"></div>
+                <div>
+                    <div class="option-title" id="garciaTitle">Ryan Garcia Win</div>
+                    <div class="option-desc" id="garciaDesc">Win via Judges' Scorecards</div>
+                </div>
+            </div>
+            <div class="voucher-tag" id="garciaVoucher">A luxury jewelry piece</div>
+        </div>
+        <div class="progress-bar-wrap">
+            <div class="progress-fill" style="width:72%"></div>
+        </div>
+        <div class="option-item" data-val="benn">
+            <div class="option-left">
+                <div class="radio-circle"></div>
+                <div>
+                    <div class="option-title" id="bennTitle">Conor Benn Win</div>
+                    <div class="option-desc" id="bennDesc">Win via Judges' Scorecards</div>
+                </div>
+            </div>
+            <div class="voucher-tag" id="bennVoucher">An LV wallet</div>
+        </div>
+        <div class="progress-bar-wrap">
+            <div class="progress-fill" style="width:28%"></div>
+        </div>
+        <button class="submit-btn" id="submitBtn" disabled>Submit My Prediction</button>
+        <div class="ticket-info" id="ticketInfo"></div>
+    </div>
+<script>
+    const banner = document.getElementById('fightBanner');
+    const items = document.querySelectorAll('.option-item');
+    const submitBtn = document.getElementById('submitBtn');
+    const languageSelect = document.getElementById('languageSelect');
+    const ticketInfo = document.getElementById('ticketInfo');
+    const storageKey = 'vegas_championship_prediction_v1';
+    const languageKey = 'vegas_championship_language_v1';
+    let selectedVal = null;
+    let isLocked = false;
+
+    const translations = {
+        en:{label:'PREDICT DECISION WINNER',garcia:'Ryan Garcia Win',benn:'Conor Benn Win',desc:'Win via Judges\' Scorecards',gVoucher:'200 USD Voucher',bVoucher:'100 USD Voucher',submit:'Submit My Prediction',locked:'Prediction Locked',ticket:'Your exclusive prediction code:'},
+        zh:{label:'预测判定获胜者',garcia:'莱恩·加西亚 获胜',benn:'康纳·本 获胜',desc:'裁判评分判定获胜',gVoucher:'200 美元代金券',bVoucher:'100 美元代金券',submit:'提交我的竞猜',locked:'竞猜已锁定',ticket:'您的专属竞猜码：'},
+        es:{label:'PREDICE EL GANADOR POR DECISIÓN',garcia:'Gana Ryan Garcia',benn:'Gana Conor Benn',desc:'Victoria por decisión de los jueces',gVoucher:'Cupón de 200 USD',bVoucher:'Cupón de 100 USD',submit:'Enviar mi predicción',locked:'Predicción bloqueada',ticket:'Tu código de predicción exclusivo:'},
+        fr:{label:'PRONOSTIQUER LE VAINQUEUR AUX POINTS',garcia:'Victoire de Ryan Garcia',benn:'Victoire de Conor Benn',desc:'Victoire à la décision des juges',gVoucher:'Bon de 200 USD',bVoucher:'Bon de 100 USD',submit:'Envoyer ma prédiction',locked:'Prédiction verrouillée',ticket:'Votre code de pronostic exclusif :'},
+        de:{label:'SIEGER NACH PUNKTEN VORHERSAGEN',garcia:'Sieg Ryan Garcia',benn:'Sieg Conor Benn',desc:'Sieg nach Punktrichterentscheidung',gVoucher:'200-USD-Gutschein',bVoucher:'100-USD-Gutschein',submit:'Meine Vorhersage senden',locked:'Vorhersage gesperrt',ticket:'Ihr exklusiver Vorhersagecode:'},
+        pt:{label:'PREVEJA O VENCEDOR POR DECISÃO',garcia:'Vitória de Ryan Garcia',benn:'Vitória de Conor Benn',desc:'Vitória por decisão dos juízes',gVoucher:'Voucher de 200 USD',bVoucher:'Voucher de 100 USD',submit:'Enviar minha previsão',locked:'Previsão bloqueada',ticket:'Seu código exclusivo de previsão:'},
+        it:{label:'PRONOSTICA IL VINCITORE AI PUNTI',garcia:'Vince Ryan Garcia',benn:'Vince Conor Benn',desc:'Vittoria ai punti dei giudici',gVoucher:'Buono da 200 USD',bVoucher:'Buono da 100 USD',submit:'Invia il mio pronostico',locked:'Pronostico bloccato',ticket:'Il tuo codice pronostico esclusivo:'},
+        ja:{label:'判定勝者を予想',garcia:'ライアン・ガルシア 勝利',benn:'コナー・ベン 勝利',desc:'判定による勝利',gVoucher:'200米ドルクーポン',bVoucher:'100米ドルクーポン',submit:'予想を送信',locked:'予想はロック済み',ticket:'あなた専用の予想コード：'},
+        ko:{label:'판정 승자 예측',garcia:'라이언 가르시아 승리',benn:'코너 벤 승리',desc:'심판 판정 승리',gVoucher:'200 USD 바우처',bVoucher:'100 USD 바우처',submit:'예측 제출',locked:'예측 잠김',ticket:'전용 예측 코드:'},
+        ru:{label:'ПРОГНОЗ ПОБЕДИТЕЛЯ ПО ОЧКАМ',garcia:'Победа Райана Гарсии',benn:'Победа Конора Бенна',desc:'Победа по решению судей',gVoucher:'Ваучер 200 USD',bVoucher:'Ваучер 100 USD',submit:'Отправить прогноз',locked:'Прогноз заблокирован',ticket:'Ваш эксклюзивный код прогноза:'},
+        ar:{label:'توقع الفائز بقرار الحكام',garcia:'فوز رايان غارسيا',benn:'فوز كونور بن',desc:'فوز بقرار الحكام',gVoucher:'قسيمة 200 دولار',bVoucher:'قسيمة 100 دولار',submit:'إرسال توقعي',locked:'تم قفل التوقع',ticket:'رمز توقعك الحصري:'},
+        hi:{label:'निर्णय विजेता का अनुमान',garcia:'रायन गार्सिया की जीत',benn:'कॉनर बेन की जीत',desc:'जजों के निर्णय से जीत',gVoucher:'200 USD वाउचर',bVoucher:'100 USD वाउचर',submit:'मेरा अनुमान जमा करें',locked:'अनुमान लॉक हो गया',ticket:'आपका विशेष अनुमान कोड:'},
+        th:{label:'ทายผู้ชนะด้วยคะแนน',garcia:'ไรอัน การ์เซีย ชนะ',benn:'คอเนอร์ เบนน์ ชนะ',desc:'ชนะด้วยคะแนนจากกรรมการ',gVoucher:'คูปอง 200 USD',bVoucher:'คูปอง 100 USD',submit:'ส่งคำทายของฉัน',locked:'ล็อกคำทายแล้ว',ticket:'รหัสคำทายเฉพาะของคุณ:'},
+        vi:{label:'DỰ ĐOÁN NGƯỜI THẮNG THEO QUYẾT ĐỊNH',garcia:'Ryan Garcia thắng',benn:'Conor Benn thắng',desc:'Thắng theo quyết định trọng tài',gVoucher:'Phiếu 200 USD',bVoucher:'Phiếu 100 USD',submit:'Gửi dự đoán',locked:'Dự đoán đã khóa',ticket:'Mã dự đoán độc quyền của bạn:'},
+        id:{label:'PREDIKSI PEMENANG KEPUTUSAN',garcia:'Ryan Garcia Menang',benn:'Conor Benn Menang',desc:'Menang melalui keputusan juri',gVoucher:'Voucher 200 USD',bVoucher:'Voucher 100 USD',submit:'Kirim prediksi saya',locked:'Prediksi dikunci',ticket:'Kode prediksi eksklusif Anda:'},
+        tr:{label:'KARARLA KAZANANI TAHMİN ET',garcia:'Ryan Garcia Kazanır',benn:'Conor Benn Kazanır',desc:'Hakem kararıyla galibiyet',gVoucher:'200 USD Kupon',bVoucher:'100 USD Kupon',submit:'Tahminimi gönder',locked:'Tahmin kilitlendi',ticket:'Özel tahmin kodunuz:'}
+    };
+
+    function updateBanner(value){
+        banner.className = 'fight-banner';
+        if(value === 'garcia') banner.classList.add('select-left');
+        if(value === 'benn') banner.classList.add('select-right');
+    }
+    function applyLanguage(lang){
+        const t = translations[lang] || translations.en;
+        document.documentElement.lang = lang;
+        document.getElementById('predictLabel').textContent = t.label;
+        document.getElementById('garciaTitle').textContent = t.garcia;
+        document.getElementById('bennTitle').textContent = t.benn;
+        document.getElementById('garciaDesc').textContent = t.desc;
+        document.getElementById('bennDesc').textContent = t.desc;
+        document.getElementById('garciaVoucher').textContent = t.gVoucher;
+        document.getElementById('bennVoucher').textContent = t.bVoucher;
+        submitBtn.textContent = isLocked ? t.locked : t.submit;
+        if(isLocked) ticketInfo.innerHTML = `${t.ticket}<br><strong>${ticketInfo.dataset.code}</strong>`;
+    }
+    function makeCode(choice){
+        const random = crypto.getRandomValues(new Uint32Array(2));
+        const fighter = choice === 'garcia' ? 'RYAN-GARCIA' : 'CONOR-BENN';
+        return `VIP-${fighter}-${random[0].toString(36).toUpperCase()}-${random[1].toString(36).toUpperCase()}`;
+    }
+    function lockPrediction(value, code){
+        selectedVal = value;
+        isLocked = true;
+        items.forEach(item => item.classList.toggle('active', item.dataset.val === value));
+        items.forEach(item => item.classList.add('locked'));
+        updateBanner(value);
+        submitBtn.disabled = true;
+        ticketInfo.dataset.code = code;
+        ticketInfo.classList.add('visible');
+        applyLanguage(languageSelect.value);
+    }
+    items.forEach(item=>{
+        item.addEventListener('click',()=>{
+            if(isLocked) return;
+            items.forEach(i=>i.classList.remove('active'));
+            item.classList.add('active');
+            selectedVal = item.dataset.val;
+            submitBtn.disabled = false;
+            updateBanner(selectedVal);
+        });
+    });
+    languageSelect.addEventListener('change',()=>{
+        localStorage.setItem(languageKey, languageSelect.value);
+        applyLanguage(languageSelect.value);
+    });
+    submitBtn.addEventListener('click',()=>{
+        if(!selectedVal || isLocked) return;
+        const code = makeCode(selectedVal);
+        localStorage.setItem(storageKey, JSON.stringify({choice:selectedVal, code:code}));
+        lockPrediction(selectedVal, code);
+    });
+    const savedLanguage = localStorage.getItem(languageKey);
+    if(savedLanguage && translations[savedLanguage]) languageSelect.value = savedLanguage;
+    const saved = localStorage.getItem(storageKey);
+    if(saved){
+        try{
+            const prediction = JSON.parse(saved);
+            if(['garcia','benn'].includes(prediction.choice) && prediction.code){
+                const fighterName = prediction.choice === 'garcia' ? 'RYAN-GARCIA' : 'CONOR-BENN';
+                if(!prediction.code.includes(fighterName)){
+                    prediction.code = makeCode(prediction.choice);
+                    localStorage.setItem(storageKey, JSON.stringify(prediction));
+                }
+                lockPrediction(prediction.choice, prediction.code);
+            }
+        }catch(error){ localStorage.removeItem(storageKey); }
+    }
+    applyLanguage(languageSelect.value);
+</script>
+</body>
+</html>
