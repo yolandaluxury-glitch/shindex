@@ -622,8 +622,6 @@
         document.getElementById('bennTitle').textContent = t.benn;
         document.getElementById('garciaDesc').textContent = t.desc;
         document.getElementById('bennDesc').textContent = t.desc;
-        document.getElementById('garciaVoucher').textContent = t.gVoucher;
-        document.getElementById('bennVoucher').textContent = t.bVoucher;
         submitBtn.textContent = isLocked ? t.locked : t.submit;
         if(isLocked) ticketInfo.innerHTML = `${t.ticket}<br><strong>${ticketInfo.dataset.code}</strong>`;
     }
